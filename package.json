@@ -9,10 +9,10 @@
 		"url": "git+https://github.com/white-wolf97/petics.git"
 	},
 	"scripts": {
-		"build": "tsc",
+		"build": "yarn run tsc",
 		"dev": "yarn run ts-node src/main.ts",
 		"start": "node dist/main.js",
-		"watch": "tsc --watch"
+		"watch": "yarn run tsc --watch"
 	},
 	"keywords": [
 		"pets"
