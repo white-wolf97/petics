@@ -1,7 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
+import config from './config';
 
-const port = 8080;
 const app = express();
 
 app.use(helmet());
@@ -10,6 +10,6 @@ app.get('*', (req, res, next) => {
 	res.send('hi');
 });
 
-app.listen(port, () => {
-	console.log(`server running on port :${port}`);
+app.listen(config.port, () => {
+	console.log(`server running on port :${config.port}`);
 });
