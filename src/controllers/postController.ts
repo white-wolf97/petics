@@ -1,5 +1,5 @@
 export default class PostController {
-	PostController() {}
+	constructor() {}
 
 	public getPostById = (req: any, res: any) => {
 		/* get post information (author, date, photos) */

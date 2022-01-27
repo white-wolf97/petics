@@ -1,5 +1,5 @@
 export default class AuthController {
-	AuthController() {}
+	constructor() {}
 
 	public login = (req: any, res: any) => {};
 
