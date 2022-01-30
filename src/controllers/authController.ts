@@ -1,7 +1,5 @@
 export default class AuthController {
-	constructor() {}
+	public static login(req: any, res: any): void {}
 
-	public login = (req: any, res: any) => {};
-
-	public logout = (req: any, res: any) => {};
+	public static logout(req: any, res: any): void {}
 }

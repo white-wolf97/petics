@@ -8,8 +8,8 @@ interface PeticsConfiguration {
 }
 
 const config: PeticsConfiguration = {
-	port: (process.env.PORT && parseInt(process.env.PORT)) || 8080;
-	tokenSecret: (process.env.TOKEN_SECRET) || ''
+	port: (process.env.PORT && parseInt(process.env.PORT)) || 8080,
+	tokenSecret: process.env.TOKEN_SECRET || ''
 };
 
 export default config;

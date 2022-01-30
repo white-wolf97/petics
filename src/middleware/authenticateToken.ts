@@ -1,8 +1,7 @@
 import config from '../config';
 import DatabaseError from '../exceptions/databaseError';
 import TokenBlacklist from '../models/tokenBlacklist';
-
-var jwt = require('jsonwebtoken');
+import * as jwt from 'jsonwebtoken';
 
 export default function authenticateToken(req: any, res: any, next: any) {
 	const authHeader = req.headers['authorization'];
@@ -23,8 +22,8 @@ export default function authenticateToken(req: any, res: any, next: any) {
 		}
 	} catch (err) {
 		if (err instanceof DatabaseError) {
-			// console.log(err.message); //TODO: uncomment this
-			// console.log(err.stack); //TODO: uncomment this
+			console.log(err.message);
+			console.log(err.stack);
 			return res.status(500).json({ message: 'Internal server error!' });
 		} else {
 			return res.status(401).json({ message: 'Invalid token provided' });

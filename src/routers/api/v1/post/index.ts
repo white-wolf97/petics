@@ -1,14 +1,12 @@
 import express from 'express';
 import PostController from '../../../../controllers/postController';
 
-const postController = new PostController();
-
 const router = express.Router();
 
-router.get('/post/:id', postController.getPostById);
+router.get('/post/user/:userid', PostController.getPostByUserId);
 
-router.get('/post/:userid', express.json(), postController.getPostsByUserId);
+router.get('/post/:id', PostController.getPostById);
 
-router.post('/post', express.json(), postController.createNewPost);
+router.post('/post', express.json(), PostController.createNewPost);
 
 export default router;
