@@ -1,5 +1,5 @@
-node_modules
-dist
-.env
-yarn-debug.log*
-yarn-error.log*
+/api/node_modules
+/api/dist
+/api/.env
+/api/yarn-debug.log*
+/api/yarn-error.log*
