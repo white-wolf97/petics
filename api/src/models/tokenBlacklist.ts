@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 import DatabaseError from '../exceptions/databaseError';
 
 export default class TokenBlacklist {
-	static getBlacklist() {
+	public static getBlacklist() {
 		try {
 			const blacklistBeforeParsing = fs.readFileSync(
 				path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'),
@@ -17,7 +17,7 @@ export default class TokenBlacklist {
 		}
 	}
 
-	static saveToDB(blacklist: any) {
+	public static saveToDB(blacklist: any) {
 		try {
 			fs.writeFileSync(
 				path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'),
@@ -29,7 +29,7 @@ export default class TokenBlacklist {
 		}
 	}
 
-	static isInBlacklist(token: string) {
+	public static isInBlacklist(token: string) {
 		try {
 			const blacklist = TokenBlacklist.getBlacklist();
 			return blacklist.includes(token);
