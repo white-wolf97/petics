@@ -1,4 +1,6 @@
-export const getPostById = (req: any, res: any) => {
+import { Request, Response } from 'express';
+
+export const getPostById = (req: Request, res: Response) => {
 	/* get post information (author, date, photos) */
 	const postId = req.params.id;
 	res.send({
@@ -6,6 +8,6 @@ export const getPostById = (req: any, res: any) => {
 	});
 };
 
-export const getPostsByUserId = (req: any, res: any) => {};
+export const getPostsByUserId = (req: Request, res: Response) => {};
 
-export const createNewPost = (req: any, res: any) => {};
+export const createNewPost = (req: Request, res: Response) => {};

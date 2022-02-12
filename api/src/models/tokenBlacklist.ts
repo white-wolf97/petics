@@ -1,40 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-import DatabaseError from '../exceptions/databaseError';
+import { Schema, model } from 'mongoose';
 
-export default class TokenBlacklist {
-	public static getBlacklist() {
-		try {
-			const blacklistBeforeParsing = fs.readFileSync(
-				path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'),
-				'utf8'
-			);
-			if (blacklistBeforeParsing)
-				return JSON.parse(blacklistBeforeParsing);
-			else return [];
-		} catch (err) {
-			throw new DatabaseError('Problem accessing the database!');
-		}
+const TokenBlacklistSchema = new Schema({
+	token: {
+		type: String,
+		required: true
 	}
+});
 
-	public static saveToDB(blacklist: any) {
-		try {
-			fs.writeFileSync(
-				path.join(__dirname, '..', 'database', 'tokenBlacklist.txt'),
-				JSON.stringify(blacklist),
-				'utf8'
-			);
-		} catch (err) {
-			throw new DatabaseError('Problem accessing the database!');
-		}
-	}
-
-	public static isInBlacklist(token: string) {
-		try {
-			const blacklist = TokenBlacklist.getBlacklist();
-			return blacklist.includes(token);
-		} catch (err) {
-			throw new DatabaseError('Problem accessing the database!');
-		}
-	}
-}
+export default model('TokenBlacklist', TokenBlacklistSchema);
