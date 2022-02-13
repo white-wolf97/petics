@@ -2,6 +2,7 @@ import express from 'express';
 import {
 	getPostById,
 	createNewPost,
+	togglePostLike,
 	getPostsByUserId
 } from '../../../../controllers/postController';
 import { authenticateToken } from '../../../../middleware/authenticateToken';
@@ -17,5 +18,7 @@ router.get(
 );
 
 router.post('/post', [express.json(), authenticateToken], createNewPost);
+
+router.post('/post/like', [express.json(), authenticateToken], togglePostLike);
 
 export default router;

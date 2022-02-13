@@ -22,7 +22,8 @@ const signUp = async (req: Request, res: Response) => {
 				firstName,
 				lastName,
 				email,
-				password: hash(password)
+				password: hash(password),
+				likedPosts: []
 			});
 			await user.save();
 			const token = generateAccessToken(email);
