@@ -15,8 +15,7 @@ export const getPostsByUserId = (req: Request, res: Response) => {};
 
 export const createNewPost = async (req: RequestWithUser, res: Response) => {
 	try {
-		const description = req.body.description;
-		const imgUrl = req.body.imgUrl;
+		const { description, imgUrl } = req.body;
 		const email = req.user.email;
 		let user = await User.findOne({ email });
 		if (!user)
