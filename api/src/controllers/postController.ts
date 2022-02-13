@@ -13,3 +13,7 @@ export const getPostsByUserId = (req: Request, res: Response) => {};
 export const createNewPost = (req: Request, res: Response) => {
 	res.json({ ok: true });
 };
+
+export const getFavoritesPostsByUserId = (req: Request, res: Response) => {
+	res.send('ok');
+};

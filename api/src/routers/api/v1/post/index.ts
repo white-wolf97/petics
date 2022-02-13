@@ -2,6 +2,7 @@ import express from 'express';
 import {
 	getPostById,
 	createNewPost,
+	getFavoritesPostsByUserId,
 	getPostsByUserId
 } from '../../../../controllers/postController';
 import { authenticateToken } from '../../../../middleware/authenticateToken';
@@ -17,5 +18,11 @@ router.get(
 );
 
 router.post('/post', [express.json(), authenticateToken], createNewPost);
+
+router.get(
+	'/post/favorites/:userId',
+	authenticateToken,
+	getFavoritesPostsByUserId
+);
 
 export default router;
