@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../models/user';
 import { generateAccessToken, hash } from '../utils';
+import TokenBlacklist from '../models/tokenBlacklist';
 
 export const login = async (req: Request, res: Response) => {
 	try {
@@ -39,4 +40,21 @@ export const login = async (req: Request, res: Response) => {
 	}
 };
 
-export const logout = (req: Request, res: Response) => {};
+export const logout = async (req: Request, res: Response) => {
+	try {
+		const authHeader = req.headers['authorization'];
+		const token = authHeader && authHeader.split(' ')[1];
+		const newTokenInDb = new TokenBlacklist({ token });
+		await newTokenInDb.save();
+		res.json({ status: 'success', data: { message: 'Logged out!' } });
+	} catch (err) {
+		res.status(500).json({
+			status: 'error',
+			data: { message: 'An unexpected error occurred!' }
+		});
+		if (err instanceof Error) {
+			console.log(err.message);
+			console.log(err.stack);
+		}
+	}
+};

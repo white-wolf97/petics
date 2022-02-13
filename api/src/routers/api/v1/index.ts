@@ -1,7 +1,7 @@
 import express from 'express';
 import postRouter from './post';
 import authRouter from './auth';
-import userRouter from './user'
+import userRouter from './user';
 
 const router = express.Router();
 

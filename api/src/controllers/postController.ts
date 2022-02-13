@@ -10,4 +10,6 @@ export const getPostById = (req: Request, res: Response) => {
 
 export const getPostsByUserId = (req: Request, res: Response) => {};
 
-export const createNewPost = (req: Request, res: Response) => {};
+export const createNewPost = (req: Request, res: Response) => {
+	res.json({ ok: true });
+};
