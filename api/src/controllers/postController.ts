@@ -95,6 +95,6 @@ export const togglePostLike = async (req: RequestWithUser, res: Response) => {
 	}
 };
 
-export const getFavoritesPostsByUserId = (req: Request, res: Response) => {
+export const getLikedPostsByUserId = (req: Request, res: Response) => {
 	res.send('ok');
 };

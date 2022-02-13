@@ -1,8 +1,11 @@
 import express from 'express';
+import { check } from 'express-validator';
+import validateFields from '../../../../middleware/validateFields';
 import {
 	getPostById,
 	createNewPost,
 	togglePostLike,
+	getLikedPostsByUserId,
 	getPostsByUserId
 } from '../../../../controllers/postController';
 import { authenticateToken } from '../../../../middleware/authenticateToken';
@@ -17,7 +20,22 @@ router.get(
 	getPostsByUserId
 );
 
-router.post('/post', [express.json(), authenticateToken], createNewPost);
+router.get(
+	'/post/liked/:userid',
+	[express.json(), authenticateToken],
+	getLikedPostsByUserId
+);
+
+router.post(
+	'/post',
+	[
+		express.json(),
+		check('imgUrl', 'Please enter an image url').trim().not().isEmpty(),
+		validateFields,
+		authenticateToken
+	],
+	createNewPost
+);
 
 router.post('/post/like', [express.json(), authenticateToken], togglePostLike);
 

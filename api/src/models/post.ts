@@ -7,8 +7,7 @@ const PostSchema = new Schema({
 	},
 	imgUrl: {
 		type: String,
-		required: true,
-		unique: true
+		required: true
 	},
 	owner: {
 		type: Schema.Types.ObjectId,
