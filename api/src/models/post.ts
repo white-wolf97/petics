@@ -1,10 +1,6 @@
 import { Schema, model } from 'mongoose';
 
 const PostSchema = new Schema({
-	title: {
-		type: String,
-		required: true
-	},
 	description: {
 		type: String,
 		required: true
@@ -14,10 +10,16 @@ const PostSchema = new Schema({
 		required: true,
 		unique: true
 	},
-	posterUser: {
+	owner: {
 		type: Schema.Types.ObjectId,
 		ref: 'User'
-	}
+	},
+	likedBy: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: 'User'
+		}
+	]
 });
 
 export default model('Post', PostSchema);
