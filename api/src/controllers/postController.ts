@@ -42,12 +42,12 @@ export const createNewPost = async (req: RequestWithUser, res: Response) => {
 	});
 };
 
-export const likeDislikePost = async (req: RequestWithUser, res: Response) => {
+export const togglePostLike = async (req: RequestWithUser, res: Response) => {
 	try {
 		const userEmail = req.user.email;
 		const postId = req.body.postId;
 
-		let user = await User.findOne({ email: userEmail });
+		const user = await User.findOne({ email: userEmail });
 		if (!user)
 			return res.status(400).json({
 				status: 'fail',
@@ -56,12 +56,7 @@ export const likeDislikePost = async (req: RequestWithUser, res: Response) => {
 				}
 			});
 
-		if (user.likedPosts.includes(postId)) user.likedPosts.remove(postId);
-		else user.likedPosts = [...user.likedPosts, postId];
-		user.save();
-
-		const userId = user._id;
-		let post = await Post.findById(postId);
+		const post = await Post.findById(postId);
 		if (!post)
 			return res.status(400).json({
 				status: 'fail',
@@ -69,6 +64,12 @@ export const likeDislikePost = async (req: RequestWithUser, res: Response) => {
 					message: `There is not an post with id ${postId} in the database`
 				}
 			});
+
+		if (user.likedPosts.includes(postId)) user.likedPosts.remove(postId);
+		else user.likedPosts = [...user.likedPosts, postId];
+		user.save();
+
+		const userId = user._id;
 
 		if (post.likedBy.includes(userId)) post.likedBy.remove(userId);
 		else post.likedBy = [...post.likedBy, userId];
