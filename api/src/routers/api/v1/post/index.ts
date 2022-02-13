@@ -2,7 +2,7 @@ import express from 'express';
 import {
 	getPostById,
 	createNewPost,
-	getFavoritesPostsByUserId,
+	togglePostLike,
 	getPostsByUserId
 } from '../../../../controllers/postController';
 import { authenticateToken } from '../../../../middleware/authenticateToken';
@@ -19,10 +19,6 @@ router.get(
 
 router.post('/post', [express.json(), authenticateToken], createNewPost);
 
-router.get(
-	'/post/favorites/:userId',
-	authenticateToken,
-	getFavoritesPostsByUserId
-);
+router.post('/post/like', [express.json(), authenticateToken], togglePostLike);
 
 export default router;
