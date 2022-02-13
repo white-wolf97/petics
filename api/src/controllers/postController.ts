@@ -108,5 +108,15 @@ export const togglePostLike = async (req: RequestWithUser, res: Response) => {
 };
 
 export const getLikedPostsByUserId = async (req: Request, res: Response) => {
-	res.send('ok');
+	const userId = req.params.userId;
+
+	const user = await User.findById(userId);
+	if (!user)
+		return res.status(400).json({
+			status: 'fail',
+			data: {
+				message: `There is not an user with id ${userId} in the database`
+			}
+		});
+	return null;
 };
