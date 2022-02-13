@@ -3,7 +3,8 @@ import { Schema, model } from 'mongoose';
 const TokenBlacklistSchema = new Schema({
 	token: {
 		type: String,
-		required: true
+		required: true,
+		unique: true
 	}
 });
 
