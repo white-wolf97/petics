@@ -14,32 +14,45 @@ export const getPostById = (req: Request, res: Response) => {
 export const getPostsByUserId = (req: Request, res: Response) => {};
 
 export const createNewPost = async (req: RequestWithUser, res: Response) => {
-	const description = req.body.description;
-	const imgUrl = req.body.imgUrl;
-	const email = req.user.email;
-	let user = await User.findOne({ email });
-	if (!user)
-		return res.status(400).json({
-			status: 'fail',
+	try {
+		const description = req.body.description;
+		const imgUrl = req.body.imgUrl;
+		const email = req.user.email;
+		let user = await User.findOne({ email });
+		if (!user)
+			return res.status(400).json({
+				status: 'fail',
+				data: {
+					message: `There is not an user with email ${email} in the database`
+				}
+			});
+
+		const post = new Post({
+			description,
+			imgUrl,
+			owner: user._id,
+			likedBy: []
+		});
+		await post.save();
+
+		return res.status(201).json({
+			status: 'success',
 			data: {
-				message: `There is not an user with email ${email} in the database`
+				message: `Post successfully created!`
 			}
 		});
-
-	const post = new Post({
-		description,
-		imgUrl,
-		owner: user._id,
-		likedBy: []
-	});
-	await post.save();
-
-	return res.status(201).json({
-		status: 'success',
-		data: {
-			message: `Post successfully created!`
+	} catch (err) {
+		if (err instanceof Error) {
+			console.log(err.message);
+			console.log(err.stack);
 		}
-	});
+		return res.status(500).json({
+			status: 'fail',
+			data: {
+				message: `Internal server error`
+			}
+		});
+	}
 };
 
 export const togglePostLike = async (req: RequestWithUser, res: Response) => {
@@ -95,6 +108,6 @@ export const togglePostLike = async (req: RequestWithUser, res: Response) => {
 	}
 };
 
-export const getLikedPostsByUserId = (req: Request, res: Response) => {
+export const getLikedPostsByUserId = async (req: Request, res: Response) => {
 	res.send('ok');
 };
