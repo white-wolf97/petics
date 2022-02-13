@@ -21,8 +21,12 @@ router.get(
 );
 
 router.get(
-	'/post/liked/:userid',
-	[express.json(), authenticateToken],
+	'/post/liked/:userId',
+	[
+		check('userId', 'Please enter a valid userId').trim().not().isEmpty(),
+		validateFields,
+		authenticateToken
+	],
 	getLikedPostsByUserId
 );
 
