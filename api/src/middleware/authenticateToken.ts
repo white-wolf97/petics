@@ -1,11 +1,10 @@
 import config from '../config';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import TokenBlacklist from '../models/tokenBlacklist';
 import * as jwt from 'jsonwebtoken';
-import { RequestWithUser } from '../common/requestWithUser';
 
 export const authenticateToken = async (
-	req: RequestWithUser,
+	req: Request,
 	res: Response,
 	next: any
 ) => {
@@ -28,7 +27,7 @@ export const authenticateToken = async (
 			});
 		} else {
 			const decoded = jwt.verify(token, config.tokenSecret);
-			req.user = decoded;
+			(req as any).user = decoded;
 		}
 	} catch (err) {
 		return res.status(401).json({
