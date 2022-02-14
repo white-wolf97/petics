@@ -2,23 +2,20 @@ import express from 'express';
 import helmet from 'helmet';
 import config from './config';
 import apiv1 from './routers/api/v1';
-import { dbConnection } from './database/config';
+import db from './database';
 
 const app = express();
 
-app.use(helmet());
-app.use('/api/v1', apiv1);
+const main = async () => {
+	app.use(helmet());
+	app.use('/api/v1', apiv1);
 
-try {
-	dbConnection();
-} catch (err) {
-	console.log('Error initializing database');
-	if (err instanceof Error) {
-		console.log(err.message);
-		console.log(err.stack);
-	}
-}
+	await db.connect();
 
-app.listen(config.port, () => {
-	console.log(`server running on port: ${config.port}`);
-});
+	app.listen(config.port, () => {
+		console.log(`server started succesfully`);
+		console.log(`server is running on http://localhost:${config.port}`);
+	});
+};
+
+main();
