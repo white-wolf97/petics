@@ -1,8 +1,11 @@
 import express from 'express';
+import { check } from 'express-validator';
+import validateFields from '../../../../middleware/validateFields';
 import {
 	getPostById,
 	createNewPost,
 	togglePostLike,
+	getLikedPostsByUserId,
 	getPostsByUserId
 } from '../../../../controllers/postController';
 import { authenticateToken } from '../../../../middleware/authenticateToken';
@@ -15,6 +18,16 @@ router.get(
 	'/post/:userid',
 	[express.json(), authenticateToken],
 	getPostsByUserId
+);
+
+router.get(
+	'/post/liked/:userId',
+	[
+		check('userId', 'Please enter a valid userId').trim().not().isEmpty(),
+		validateFields,
+		authenticateToken
+	],
+	getLikedPostsByUserId
 );
 
 router.post('/post', authenticateToken, createNewPost);

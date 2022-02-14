@@ -22,7 +22,7 @@ export const createNewPost = async (req: Request, res: Response) => {
 		res.status(400).json({
 			status: 'fail',
 			data: {
-				message: `There is not an user with email ${email} in the database`
+				message: `Post successfully created!`
 			}
 		});
 
@@ -87,22 +87,26 @@ export const togglePostLike = async (req: Request, res: Response) => {
 		const postId = req.body.postId;
 
 		const user = await User.findOne({ email: userEmail });
-		if (!user)
-			return res.status(400).json({
+		if (!user) {
+			res.status(400).json({
 				status: 'fail',
 				data: {
 					message: `There is not an user with email ${userEmail} in the database`
 				}
 			});
+			return;
+		}
 
 		const post = await Post.findById(postId);
-		if (!post)
-			return res.status(400).json({
+		if (!post) {
+			res.status(400).json({
 				status: 'fail',
 				data: {
 					message: `There is not an post with id ${postId} in the database`
 				}
 			});
+			return;
+		}
 
 		if (user.likedPosts.includes(postId)) user.likedPosts.remove(postId);
 		else user.likedPosts = [...user.likedPosts, postId];
@@ -114,22 +118,57 @@ export const togglePostLike = async (req: Request, res: Response) => {
 		else post.likedBy = [...post.likedBy, userId];
 
 		post.save();
-		return res.status(200).json({
+		res.status(200).json({
 			status: 'success',
 			data: {
 				message: `Ok`
 			}
 		});
+		return;
 	} catch (err) {
 		if (err instanceof Error) {
 			console.log(err.message);
 			console.log(err.stack);
 		}
-		return res.status(500).json({
+		res.status(500).json({
 			status: 'fail',
 			data: {
 				message: `Internal server error`
 			}
 		});
+		return;
+	}
+};
+
+export const getLikedPostsByUserId = async (req: Request, res: Response) => {
+	try {
+		const userId = req.params.userId;
+
+		const user = await User.findById(userId).populate('likedPosts');
+		console.log(user);
+		if (!user) {
+			res.status(400).json({
+				status: 'fail',
+				data: {
+					message: `There is not an user with id ${userId} in the database`
+				}
+			});
+			return;
+		}
+		res.json({ status: 'success', data: user.likedPosts });
+
+		return;
+	} catch (err) {
+		if (err instanceof Error) {
+			console.log(err.message);
+			console.log(err.stack);
+		}
+		res.status(500).json({
+			status: 'fail',
+			data: {
+				message: `Internal server error`
+			}
+		});
+		return;
 	}
 };
