@@ -30,16 +30,7 @@ router.get(
 	getLikedPostsByUserId
 );
 
-router.post(
-	'/post',
-	[
-		express.json(),
-		check('imgUrl', 'Please enter an image url').trim().not().isEmpty(),
-		validateFields,
-		authenticateToken
-	],
-	createNewPost
-);
+router.post('/post', authenticateToken, createNewPost);
 
 router.post('/post/like', [express.json(), authenticateToken], togglePostLike);
 
