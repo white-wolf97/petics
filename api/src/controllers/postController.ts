@@ -1,5 +1,6 @@
+import { unlink } from 'fs';
 import { Request, Response } from 'express';
-import { RequestWithUser } from '../common/requestWithUser';
+import { upload } from '../middleware/upload';
 import User from '../models/user';
 import Post from '../models/post';
 
@@ -13,38 +14,76 @@ export const getPostById = (req: Request, res: Response) => {
 
 export const getPostsByUserId = (req: Request, res: Response) => {};
 
-export const createNewPost = async (req: RequestWithUser, res: Response) => {
-	const description = req.body.description;
-	const imgUrl = req.body.imgUrl;
-	const email = req.user.email;
-	let user = await User.findOne({ email });
-	if (!user)
-		return res.status(400).json({
+export const createNewPost = async (req: Request, res: Response) => {
+	const email = (req as any).user.email;
+	const user = await User.findOne({ email });
+
+	if (!user) {
+		res.status(400).json({
 			status: 'fail',
 			data: {
 				message: `There is not an user with email ${email} in the database`
 			}
 		});
 
-	const post = new Post({
-		description,
-		imgUrl,
-		owner: user._id,
-		likedBy: []
-	});
-	await post.save();
+		return;
+	}
 
-	return res.status(201).json({
-		status: 'success',
-		data: {
-			message: `Post successfully created!`
+	upload.single('post_image')(req, res, async (err) => {
+		if (err) {
+			res.status(400).json({
+				status: 'fail',
+				data: {
+					message: err.message
+				}
+			});
+
+			return;
 		}
+
+		if (!req.file) {
+			res.status(400).json({
+				status: 'fail',
+				data: {
+					message: 'A photo is required to create a post'
+				}
+			});
+
+			return;
+		}
+
+		if (!req.body.description) {
+			res.status(400).json({
+				status: 'fail',
+				data: {
+					message: 'A description is required to create a post'
+				}
+			});
+
+			unlink(`public/uploads/${req.file.filename}`, (_) => {});
+
+			return;
+		}
+
+		await new Post({
+			description: req.body.description,
+			imgUrl: req.file.filename,
+			owner: user._id,
+			likedBy: []
+		}).save();
+
+		res.status(201).json({
+			status: 'success',
+			data: {
+				message: `Post successfully created!`
+			}
+		});
 	});
 };
 
-export const togglePostLike = async (req: RequestWithUser, res: Response) => {
+export const togglePostLike = async (req: Request, res: Response) => {
 	try {
-		const userEmail = req.user.email;
+		const userEmail = (req as any).user.email;
 		const postId = req.body.postId;
 
 		const user = await User.findOne({ email: userEmail });

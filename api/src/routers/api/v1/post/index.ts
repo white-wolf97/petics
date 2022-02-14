@@ -17,7 +17,7 @@ router.get(
 	getPostsByUserId
 );
 
-router.post('/post', [express.json(), authenticateToken], createNewPost);
+router.post('/post', authenticateToken, createNewPost);
 
 router.post('/post/like', [express.json(), authenticateToken], togglePostLike);
 
