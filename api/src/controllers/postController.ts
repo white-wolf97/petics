@@ -1,3 +1,4 @@
+import { unlink } from 'fs';
 import { Request, Response } from 'express';
 import { upload } from '../middleware/upload';
 import User from '../models/user';
@@ -14,7 +15,6 @@ export const getPostById = (req: Request, res: Response) => {
 export const getPostsByUserId = (req: Request, res: Response) => {};
 
 export const createNewPost = async (req: Request, res: Response) => {
-	const description = req.body.description;
 	const email = (req as any).user.email;
 	const user = await User.findOne({ email });
 
@@ -37,6 +37,7 @@ export const createNewPost = async (req: Request, res: Response) => {
 					message: err.message
 				}
 			});
+
 			return;
 		}
 
@@ -47,11 +48,25 @@ export const createNewPost = async (req: Request, res: Response) => {
 					message: 'A photo is required to create a post'
 				}
 			});
+
+			return;
+		}
+
+		if (!req.body.description) {
+			res.status(400).json({
+				status: 'fail',
+				data: {
+					message: 'A description is required to create a post'
+				}
+			});
+
+			unlink(`public/uploads/${req.file.filename}`, (_) => {});
+
 			return;
 		}
 
 		await new Post({
-			description,
+			description: req.body.description,
 			imgUrl: req.file.filename,
 			owner: user._id,
 			likedBy: []

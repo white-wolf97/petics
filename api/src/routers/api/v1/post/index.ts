@@ -16,6 +16,6 @@ router.get(
 	getPostsByUserId
 );
 
-router.post('/post', [express.json(), authenticateToken], createNewPost);
+router.post('/post', authenticateToken, createNewPost);
 
 export default router;
